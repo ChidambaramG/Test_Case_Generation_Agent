@@ -1,0 +1,7 @@
+transformers
+huggingface_hub
+hf-transfer
+torch
+einops
+tiktoken
+fastapi[standard]
