@@ -1,33 +1,142 @@
-# Modal Labs 
-#### Check out our [Tutorial Blogpost](https://blog.premai.io/serverless-deployment-using-huggingface-and-modal/)
+# AI Test Case Generator
 
-[Modal Labs](https://modal.com/) offers dedicated GPU and infrastructure primarily focused on facilitating serverless deployments of models. Its key features include providing serverless deployments for Large Language Models (LLMs) and image models, as well as fine-tuning LLMs.
+A Python tool that automatically generates pytest test cases for codebases using LLM (Large Language Model) assistance. This tool clones a repository, analyzes its Python files, and generates comprehensive test cases based on a feature description.
 
-## Pricing
-Below is the pricing structure of Modal Labs, updated as of March 16th, 2024. You can verify the prices [here](https://www.modal.com/pricing).
+## Features
 
-| Model              | Price (per sec)   | Price (per hour)   |
-|--------------------|--------------------|-------------------|
-| Nvidia H100        | $0.002125          | $7.65             |
-| Nvidia A100, 80 GB | $0.001553          | $5.59             |
-| Nvidia A100, 40 GB | $0.001036          | $3.73             |
-| Nvidia A10G        | $0.000306          | $1.10             |
-| Nvidia L4          | $0.000291          | $1.05             |
-| Nvidia T4          | $0.000164          | $0.59             |
+- Automatic repository cloning
+- Codebase analysis
+- LLM-powered test case generation
+- Pytest integration
+- Organized test output
+- Comprehensive logging
 
-Modal simplifies the MLOps side of model deployment by providing a convenient Python interface. Unlike other platforms like runpod, you don't need to handle Dockerfiles or Docker compose files for server building. Instead, you only need to define essential elements in the Dockerfile, such as the base image and dependencies. For example, you can find a detailed example [here](/modal/server.py).
+## Prerequisites
 
-## Getting Started
-Getting started with Modal is straightforward. Simply install Modal using pip:
+- Python 3.10+
+- Git
 
-```bash
-pip install -U modal
-```
+## Installation
 
-After installation, you can choose to either use `modal serve` or `modal deploy`. The key difference lies in the deployment process. When using `modal serve`, you can monitor the build process directly from your terminal, and your files are temporarily sent to Modal. This temporary deployment is useful for initial code testing. Here's how you can serve the model:
+1. Clone this repository
+2. Install the required dependencies:
 
-```bash
-modal serve server.py
-```
+## Required Dependencies
 
-On the other hand, `deploy` sends all your files to Modal for deployment. Once deployed, you can manage various aspects, such as watching logs and deleting apps, either through Modal's Python CLI or within their app.
+- gitpython
+- pytest
+- requests
+- pathlib
+
+
+### Parameters
+
+- `repo_url`: URL of the Git repository to analyze
+- `feature_description`: Description of the feature for which tests should be generated
+- `llm_url`: Endpoint URL of the LLM service
+
+## How It Works
+
+1. **Repository Cloning**: Clones the target repository to a temporary directory
+2. **Code Analysis**: Analyzes all Python files in the repository
+3. **Prompt Construction**: Creates a detailed prompt including the codebase and feature description
+4. **Test Generation**: Sends the prompt to an LLM to generate comprehensive test cases
+5. **Test Execution**: Writes and executes the generated tests using pytest
+
+## Generated Tests
+
+The tool generates test cases that include:
+- Pytest fixtures
+- Positive test cases
+- Negative test cases
+- Edge cases
+- Detailed comments
+- Proper assertions and error handling
+
+## Output Format
+
+Generated tests are saved in the `tests` directory of the cloned repository as `generated_test_cases.py`.
+
+## Logging
+
+The tool provides detailed logging information including:
+- Repository cloning status
+- File analysis progress
+- Test generation and execution status
+- Any errors or warnings
+
+## Error Handling
+
+The tool includes comprehensive error handling for:
+- Repository cloning issues
+- File reading errors
+- LLM communication problems
+- Test execution failures
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+# LLM Inference Server
+
+A FastAPI-based server for running Large Language Model (LLM) inference using Modal for deployment. This implementation supports streaming responses and is configured to work with Hugging Face models.
+
+## Features
+
+- 🚀 Fast inference using GPU acceleration
+- 🔄 Streaming responses support
+- 🎯 Easy model switching
+- 🔌 Built-in concurrency handling
+- 🐳 Containerized deployment using Modal
+- ⚡ Optimized for production use
+
+## Supported Models
+
+Currently configured to work with:
+- Qwen/Qwen2.5-3B-Instruct (default)
+- mistralai/Mistral-7B-v0.1
+- stabilityai/stablelm-zephyr-3b
+
+## Prerequisites
+
+- Python 3.10+
+- Modal account and CLI setup
+- CUDA-compatible environment for local testing
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies:
+
+
+## Configuration
+
+Key configurations can be adjusted in `constants.py`:
+
+- `BASE_MODEL`: Choose the Hugging Face model to use
+- `KEEP_WARM`: Minimum number of warm containers
+- `NUM_CONCURRENT_REQUESTS`: Concurrent requests per container
+- `TIMEOUT`: Server timeout in seconds
+- `GPU_COUNT`: Number of GPUs to utilize
+
+## API Usage
+
+The server exposes a POST endpoint for completions:
+
+
+## Architecture
+
+- `engine.py`: Core LLM inference engine
+- `server.py`: FastAPI server implementation
+- `constants.py`: Configuration constants
+- `requirements.txt`: Project dependencies
+
+## Performance
+
+The server is configured to handle:
+- Up to 10 concurrent requests per container
+- Automatic scaling based on demand
+- 600-second timeout per request
+- GPU acceleration using NVIDIA A100 (40GB) for Qwen models or any available GPU for others
+
+
